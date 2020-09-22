@@ -1,27 +1,19 @@
 <template>
-	<div id="app">
-		<HelloWorld> </HelloWorld>
-	</div>
+  <div id="app">
+    <Main></Main>
+  </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import Main from "./components/Main.vue";
 
 export default {
-	name: "App",
-	components: {
-		HelloWorld,
-	},
+  name: "App",
+  components: {
+    Main
+  }
 };
 </script>
 
 <style lang="scss">
-#app {
-	font-family: Avenir, Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
-	color: #2c3e50;
-	margin-top: 60px;
-}
 </style>

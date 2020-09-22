@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="alert alert-primary" role="alert">
     <input style="color: blue;" type="text" v-model="countryName" @keyup="searchData" />
     <!--Change this to a Select Tag :)-->
     <input style="color: red; " type="text" v-model="search" @keyup="searchData" />
