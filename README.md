@@ -10,15 +10,4 @@ _App to search about countries information_
 * Bootstrap - Component creation
 
 
-
-## Authors ✒️
-
-
-* **Benicio Cardozo** - *Front - End* (https://github.com/BenicioCardozo)
-
-
-## License 📄
-
-This project is under the MIT License
----
 ⌨️ con ❤️ por [Vencho](https://github.com/BenicioCardozo) 😊
