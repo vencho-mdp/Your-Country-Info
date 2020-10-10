@@ -20,7 +20,7 @@
   </b-navbar>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap");
 
 #Logo {
