@@ -1,40 +1,16 @@
 <template>
-	<div class="containerBox alert alert-primary">
+	<div class="container-box alert alert-primary">
 		<main>
-			<h3>Search</h3>
-			<b-form-input
-				class="w-25"
-				v-model="countryName"
-				placeholder="Country Name"
-			></b-form-input>
-			<!--Change this to a Select Tag :)-->
+			<h1 style="text-align:center;">Your Country Information</h1>
+			<selectCountry :number="1" @search="search">
+			</selectCountry>
+			<!-- <selectCountry>
+			</selectCountry> -->
 			<div>
-				<b-dropdown
-					id="dropdown-left"
-					text="What do you want to know?"
-					variant="primary"
-					class="m-2"
-				>
-					<b-dropdown-item @click="searchData('Capital')"
-						>Capital</b-dropdown-item
-					>
-					<b-dropdown-item @click="searchData('Demonym')"
-						>Demonym</b-dropdown-item
-					>
-					<b-dropdown-item @click="searchData('Area')">Area</b-dropdown-item>
-				</b-dropdown>
 			</div>
-			<span class="alert alert-danger" v-if="errorMessage"
-				>Error: We can't find the Country</span
-			>
 		</main>
-
-		<!-- Show Result Component -->
 		<show-result
 			style="margin-bottom: 50px;"
-			:errorMessage="errorMessage"
-			:whatUserSearchResult="whatUserSearchResult"
-			:img="img"
 		></show-result>
 	</div>
 </template>
@@ -43,59 +19,56 @@
 // eslint-disable-next-line
 import axios from 'axios';
 import showResult from './showResult.vue';
+import selectCountry from './selectCountry.vue'
 
 export default {
 	components: {
 		showResult,
+		selectCountry
 	},
 	data() {
 		return {
-			countryName: undefined,
-			errorMessage: false,
-			img: undefined,
-			whatUserSearchResult: undefined,
+			info: undefined
 		};
 	},
 	methods: {
-		async searchData(whatToSearch) {
-			this.errorMessage = false;
-			let search = whatToSearch.toLowerCase();
-			let countryName =
-				this.countryName.charAt(0).toUpperCase() + this.countryName.slice(1);
-			if (search && countryName) {
+		async search() {
+			var country = this.$store.state.FirstCountryName
+			if (country) {
 				try {
 					let response = await axios.get(
-						`https://restcountries.eu/rest/v2/name/${countryName}`
+						`https://restcountries.eu/rest/v2/name/${country}`
 					);
-					this.img = response.data[0].flag;
-					this.whatUserSearchResult = response.data[0][search];
-					Number(this.whatUserSearchResult)
-						? (this.whatUserSearchResult += ' Km²')
-						: false;
+					this.info = {
+						name:  response.data[0].capital,
+						area:  response.data[0].area.toLocaleString() + " Km²",
+					}
+				console.log(this.info)
+				this.$store.commit('countryInformation', await this.info)
 				} catch (error) {
-					//If there is an error (invalid Country Name)
-					this.img = undefined;
-					this.whatUserSearchResult = undefined;
-					this.errorMessage = true;
-					setTimeout(() => {
-						this.errorMessage = false;
-					}, 5000);
+					console.log(error)
 				}
 			}
-		},
+		}
 	},
 };
 </script>
 
 <style scoped>
-.containerBox {
+@media screen and (min-width: 500px){
+	h3 {
+		margin: 5vh
+	}
+}
+
+.container-box {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
 	margin: auto;
 	border-radius: 15px;
-	min-height: 83vh;
+	min-height: 96vh;
 }
 
 main {
