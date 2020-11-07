@@ -17,14 +17,22 @@ Vue.config.productionTip = false;
 const store = new Vuex.Store({
   state: {
     FirstCountryName: undefined,
-    FirstCountryInformation: null
+    FirstCountryInformation: undefined,
+    SecondCountryInformation: undefined,
+    SecondCountryName: undefined
   },
   mutations: {
-    changeCountryName(state, country) {
+    changeFirstCountryName(state, country) {
       state.FirstCountryName = country;
     },
-    countryInformation(state, countryInfo) {
+    changeFirstCountryInformation(state, countryInfo) {
       state.FirstCountryInformation = countryInfo
+    },
+    changeSecondCountryInformation(state, countryInfo) {
+      state.SecondCountryInformation = countryInfo
+    },
+    changeSecondCountryName(state, country) {
+      state.SecondCountryName = country
     },
   }
   //At this point we don't have to use "Getters" because the project is quite simple

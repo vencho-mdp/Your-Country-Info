@@ -4,8 +4,8 @@
 			<h1 style="text-align:center;">Your Country Information</h1>
 			<selectCountry :number="1" @search="search">
 			</selectCountry>
-			<!-- <selectCountry>
-			</selectCountry> -->
+			<selectCountry :number="2" @search="search">
+			</selectCountry>
 			<div>
 			</div>
 		</main>
@@ -32,8 +32,8 @@ export default {
 		};
 	},
 	methods: {
-		async search() {
-			var country = this.$store.state.FirstCountryName
+		async search(number) {
+			var country = number == 1 ? this.$store.state.FirstCountryName : this.$store.state.SecondCountryName
 			if (country) {
 				try {
 					let response = await axios.get(
@@ -44,7 +44,11 @@ export default {
 						area:  response.data[0].area.toLocaleString() + " Km²",
 					}
 				console.log(this.info)
-				this.$store.commit('countryInformation', await this.info)
+				if(number == 1 ) {
+					this.$store.commit('changeFirstCountryInformation', await this.info)
+				} else {
+					this.$store.commit('changeSecondCountryInformation', await this.info)
+				}
 				} catch (error) {
 					console.log(error)
 				}
@@ -66,8 +70,6 @@ export default {
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
-	margin: auto;
-	border-radius: 15px;
 	min-height: 96vh;
 }
 

@@ -15,8 +15,13 @@ export default{
   props: ['number'],  
   watch: {
     selected: function(country){
-      this.$store.commit('changeCountryName', country)
-      this.$emit('search', country)
+      if (this.number === 1) {
+        this.$store.commit('changeFirstCountryName', country)
+        this.$emit('search', this.number)
+      } else {
+        this.$store.commit('changeSecondCountryName', country)
+        this.$emit('search', this.number)
+      }
     }
   },
   mounted() {

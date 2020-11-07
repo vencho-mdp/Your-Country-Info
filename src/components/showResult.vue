@@ -1,15 +1,15 @@
 <template>
-  <div v-if="this.$store.state.FirstCountryInformation" class="container">
-    <div>
+  <div class="container">
+    <div v-if="this.$store.state.FirstCountryInformation && this.$store.state.FirstCountryName">
       <h2>{{this.$store.state.FirstCountryName}} </h2>
       <h4>{{ this.$store.state.FirstCountryInformation.name}}</h4>
       <h4>{{ this.$store.state.FirstCountryInformation.area}}</h4>
     </div>
-    <h2 class="vs" style="color:rgb(0, 0, 0);font-family: 'Carter One', cursive;">VS</h2>
-    <div>
-      <h2>{{this.$store.state.FirstCountryName}} </h2>
-      <h4>{{ this.$store.state.FirstCountryInformation.name}}</h4>
-      <h4>{{ this.$store.state.FirstCountryInformation.area}}</h4>
+    <h2 v-if="this.$store.state.SecondCountryName && this.$store.state.SecondCountryInformation && this.$store.state.FirstCountryInformation && this.$store.state.FirstCountryName" class="vs" style="color:rgb(0, 0, 0);font-family: 'Carter One', cursive;">VS</h2>
+    <div v-if="this.$store.state.SecondCountryName && this.$store.state.SecondCountryInformation">
+      <h2>{{this.$store.state.SecondCountryName}} </h2>
+      <h4>{{ this.$store.state.SecondCountryInformation.name}}</h4>
+      <h4>{{ this.$store.state.SecondCountryInformation.area}}</h4>
     </div>
   </div>
 </template>
