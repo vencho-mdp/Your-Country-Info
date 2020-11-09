@@ -22,6 +22,7 @@ import showResult from './showResult.vue';
 import selectCountry from './selectCountry.vue'
 
 export default {
+	
 	components: {
 		showResult,
 		selectCountry
@@ -32,17 +33,37 @@ export default {
 		};
 	},
 	methods: {
-		async search(number) {
-			var country = number == 1 ? this.$store.state.FirstCountryName : this.$store.state.SecondCountryName
+		async search(number, isRegion) {
+			var country = number === 1 ? this.$store.state.FirstCountryName : this.$store.state.SecondCountryName
 			if (country) {
 				try {
-					let response = await axios.get(
+					if(isRegion === false) {
+						let response = await axios.get(
 						`https://restcountries.eu/rest/v2/name/${country}`
 					);
-					this.info = {
-						name:  response.data[0].capital,
-						area:  response.data[0].area.toLocaleString() + " Km²",
+						this.info = {
+						capital:  response.data[0].capital,
+						population: new Intl.NumberFormat().format(response.data[0].population),
+						area:  new Intl.NumberFormat().format(response.data[0].area) + " Km²",
 					}
+					} else {
+						let query = country.replace(/[a-z]/g, '').replace(/\s/g, '');
+						if(country == "Caribbean Community") {
+						query = "CARICOM" 
+						} else if  (country == "Association of Southeast Asian Nations") { 
+						query = "ASEAN"
+						}				
+						number == 1 ? this.$store.commit('changeFirstCountryName', query) : this.$store.commit('changeSecondCountryName', query) 		
+						let response = await axios.get(
+						`https://restcountries.eu/rest/v2/regionalbloc/${query}`
+					);
+						this.info = {
+						capital:  response.data[0].capital,
+						population: new Intl.NumberFormat().format(response.data[0].population),
+						area:  new Intl.NumberFormat().format(response.data[0].area) + " Km²",
+					}
+					}
+					
 				console.log(this.info)
 				if(number == 1 ) {
 					this.$store.commit('changeFirstCountryInformation', await this.info)
@@ -70,7 +91,7 @@ export default {
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
-	min-height: 96vh;
+	height: 100%;
 }
 
 main {

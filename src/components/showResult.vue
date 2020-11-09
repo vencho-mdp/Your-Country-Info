@@ -1,21 +1,37 @@
 <template>
   <div class="container">
-    <div v-if="this.$store.state.FirstCountryInformation && this.$store.state.FirstCountryName">
+    <div class="sub-container" v-if="this.$store.state.FirstCountryInformation && this.$store.state.FirstCountryName">
       <h2>{{this.$store.state.FirstCountryName}} </h2>
-      <h4>{{ this.$store.state.FirstCountryInformation.name}}</h4>
-      <h4>{{ this.$store.state.FirstCountryInformation.area}}</h4>
+      <h4>{{ this.$store.state.FirstCountryInformation.capital}}</h4>
+      <h4 v-bigger="{ search: 'area', numberOfCountry: 'FirstCountryInformation' }">{{ this.$store.state.FirstCountryInformation.area}}</h4>
+      <h4  v-bigger="{ search: 'population', numberOfCountry: 'FirstCountryInformation' }">{{ this.$store.state.FirstCountryInformation.population}} <b-icon icon="person-fill" scale="0.7"></b-icon></h4>
     </div>
-    <h2 v-if="this.$store.state.SecondCountryName && this.$store.state.SecondCountryInformation && this.$store.state.FirstCountryInformation && this.$store.state.FirstCountryName" class="vs" style="color:rgb(0, 0, 0);font-family: 'Carter One', cursive;">VS</h2>
-    <div v-if="this.$store.state.SecondCountryName && this.$store.state.SecondCountryInformation">
+    <h2 v-if="this.$store.state.SecondCountryName && this.$store.state.SecondCountryInformation && this.$store.state.FirstCountryInformation && this.$store.state.FirstCountryName" id="vs" style="color:rgb(0, 0, 0);font-family: 'Carter One', cursive;">VS</h2>
+    <div class="sub-container" v-if="this.$store.state.SecondCountryName && this.$store.state.SecondCountryInformation">
       <h2>{{this.$store.state.SecondCountryName}} </h2>
-      <h4>{{ this.$store.state.SecondCountryInformation.name}}</h4>
-      <h4>{{ this.$store.state.SecondCountryInformation.area}}</h4>
+      <h4>{{ this.$store.state.SecondCountryInformation.capital}}</h4>
+      <h4 v-bigger="{ search: 'area', numberOfCountry: 'SecondCountryInformation' }">{{ this.$store.state.SecondCountryInformation.area}}</h4>
+      <h4 v-bigger="{ search: 'population', numberOfCountry: 'SecondCountryInformation' }">{{ this.$store.state.SecondCountryInformation.population}} <b-icon icon="person-fill" scale="0.7"></b-icon></h4>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  computed: { 
+  },
+  methods: {
+    whichIsBigger(whatToAnalize){
+      let firstCountryData = whatToAnalize == "Area" ?  Number(this.$store.state.FirstCountryInformation.area.match(/\d/g).join("")) : Number(this.$store.state.FirstCountryInformation.population.match(/\d/g).join(""))
+      let secondCountryData = whatToAnalize == "Area" ? Number(this.$store.state.SecondCountryInformation.area.match(/\d/g).join("")) : Number(this.$store.state.SecondCountryInformation.population.match(/\d/g).join("")) 
+      if(firstCountryData == secondCountryData || !firstCountryData || !secondCountryData) return false
+      if (firstCountryData > secondCountryData) {
+        return "first country"
+      } else if (secondCountryData > firstCountryData){
+        return "second country"
+      } 
+    }
+  }
 };
 </script>
 
@@ -25,23 +41,20 @@ export default {
 h2,h4{
  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
-@media screen and (max-width: 460px) and  (min-width: 260px){
-  .vs{
+@media screen and (max-width: 600px){
+  #vs{
     margin: 0 100%;
   }
 }
-
-h2{
-  display:flex;
-  align-items:center;
-  justify-content:space-around;
-}
-.container *{
+.sub-container{
   display: flex;
-  text-align: center;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  min-width: 10vw;
+  max-width: 100%;
+  margin: 0 10px;
+  max-height: 25vh;
 }
 
 .container{
@@ -50,7 +63,6 @@ h2{
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
-  width: 100%;
   padding: 3vh;
   border-radius: 15px;
   margin: 2vh;

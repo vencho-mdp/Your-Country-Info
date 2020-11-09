@@ -38,9 +38,31 @@ const store = new Vuex.Store({
   //At this point we don't have to use "Getters" because the project is quite simple
 })
 
+//Directives
+Vue.directive('bigger', {
+  update(el, binding) {
+    if (store.state.FirstCountryInformation && store.state.SecondCountryInformation) {
+      let firstCountryData = Number(store.state.FirstCountryInformation[binding.value.search].replace(/[^0-9]/g, ''))
+      let secondCountryData = Number(store.state.SecondCountryInformation[binding.value.search].replace(/[^0-9]/g, ''))
+
+      let element = Number(store.state[binding.value.numberOfCountry][binding.value.search].replace(/[^0-9]/g, ''))
+
+      if (element > secondCountryData) {
+        el.style.color = "rgb(40, 104, 203)"
+      } else if (element > firstCountryData) {
+        el.style.color = "rgb(40, 104, 203)"
+      } else {
+        el.style.color = "rgb(0, 64, 133)"
+      }
+    }
+  }
+})
+
 new Vue({
   render: function (h) {
     return h(App);
   },
   store
 }).$mount("#app");
+
+
