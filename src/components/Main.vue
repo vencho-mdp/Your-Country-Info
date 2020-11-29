@@ -2,103 +2,128 @@
 	<div class="container-box alert alert-primary">
 		<main>
 			<h1 style="text-align:center;">Your Country Information</h1>
-			<selectCountry :number="1" @search="search">
-			</selectCountry>
-			<selectCountry :number="2" @search="search">
-			</selectCountry>
-			<div>
-			</div>
+			<selectCountry :number="1" @search="search"> </selectCountry>
+			<selectCountry :number="2" @search="search"> </selectCountry>
+			<div> </div>
 		</main>
-		<show-result
-			style="margin-bottom: 50px;"
-		></show-result>
+		<show-result style="margin-bottom: 50px;"></show-result>
 	</div>
 </template>
 
 <script>
-// eslint-disable-next-line
-import axios from 'axios';
-import showResult from './showResult.vue';
-import selectCountry from './selectCountry.vue'
+	// eslint-disable-next-line
+	import axios from 'axios';
+	import showResult from './showResult.vue';
+	import selectCountry from './selectCountry.vue';
 
-export default {
-	
-	components: {
-		showResult,
-		selectCountry
-	},
-	data() {
-		return {
-			info: undefined
-		};
-	},
-	methods: {
-		async search(number, isRegion) {
-			var country = number === 1 ? this.$store.state.FirstCountryName : this.$store.state.SecondCountryName
-			if (country) {
-				try {
-					if(isRegion === false) {
-						let response = await axios.get(
-						`https://restcountries.eu/rest/v2/name/${country}`
-					);
-						this.info = {
-						capital:  response.data[0].capital,
-						population: new Intl.NumberFormat().format(response.data[0].population),
-						area:  new Intl.NumberFormat().format(response.data[0].area) + " Km²",
+	export default {
+		components: {
+			showResult,
+			selectCountry,
+		},
+		data() {
+			return {
+				info: undefined,
+			};
+		},
+		methods: {
+			async search(number, isRegion) {
+				let country =
+					number === 1
+						? this.$store.state.FirstCountryName
+						: this.$store.state.SecondCountryName;
+				if (country) {
+					try {
+						if (isRegion === false) {
+							let response = await axios(
+								`https://restcountries.eu/rest/v2/name/${country}`
+							);
+							this.info = {
+								capital: response.data[0].capital,
+								population: new Intl.NumberFormat().format(
+									response.data[0].population
+								),
+								area:
+									new Intl.NumberFormat().format(response.data[0].area) +
+									' Km²',
+							};
+						} else {
+							let query = country.replace(/[a-z]/g, '').replace(/\s/g, '');
+							if (country == 'Caribbean Community') query = 'CARICOM';
+							else if (country == 'Association of Southeast Asian Nations')
+								query = 'ASEAN';
+
+							number == 1
+								? this.$store.commit('changeFirstCountryName', query)
+								: this.$store.commit('changeSecondCountryName', query);
+							let response = await axios.get(
+								`https://restcountries.eu/rest/v2/regionalbloc/${query}`
+							);
+
+							let populationArea = {
+								population: [],
+								area: [],
+							};
+
+							for (let index = 0; index < response.data.length; index++) {
+								const element = response.data[index];
+								populationArea.population.push(Number(element.population));
+								populationArea.area.push(Number(element.area));
+							}
+
+							this.info = {
+								capital: '-',
+								population: new Intl.NumberFormat().format(
+									populationArea.population.reduce((a, b) => a + b, 0)
+								),
+								area:
+									new Intl.NumberFormat().format(
+										populationArea.area.reduce((a, b) => a + b, 0)
+									) + ' Km²',
+							};
+						}
+
+						console.log(this.info);
+						if (number == 1) {
+							this.$store.commit(
+								'changeFirstCountryInformation',
+								await this.info
+							);
+						} else {
+							this.$store.commit(
+								'changeSecondCountryInformation',
+								await this.info
+							);
+						}
+					} catch (error) {
+						console.log(error);
 					}
-					} else {
-						let query = country.replace(/[a-z]/g, '').replace(/\s/g, '');
-						if(country == "Caribbean Community") {
-						query = "CARICOM" 
-						} else if  (country == "Association of Southeast Asian Nations") { 
-						query = "ASEAN"
-						}				
-						number == 1 ? this.$store.commit('changeFirstCountryName', query) : this.$store.commit('changeSecondCountryName', query) 		
-						let response = await axios.get(
-						`https://restcountries.eu/rest/v2/regionalbloc/${query}`
-					);
-						this.info = {
-						capital:  response.data[0].capital,
-						population: new Intl.NumberFormat().format(response.data[0].population),
-						area:  new Intl.NumberFormat().format(response.data[0].area) + " Km²",
-					}
-					}
-					
-				console.log(this.info)
-				if(number == 1 ) {
-					this.$store.commit('changeFirstCountryInformation', await this.info)
-				} else {
-					this.$store.commit('changeSecondCountryInformation', await this.info)
 				}
-				} catch (error) {
-					console.log(error)
-				}
-			}
-		}
-	},
-};
+			},
+		},
+	};
 </script>
 
 <style scoped>
-@media screen and (min-width: 500px){
-	h3 {
-		margin: 5vh
+	@media screen and (min-width: 500px) {
+		h3 {
+			margin: 5vh;
+		}
 	}
-}
 
-.container-box {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	align-items: center;
-	height: 100%;
-}
+	.container-box {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
+		height: 100%;
+	}
 
-main {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
-}
+	main {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+	}
 </style>
